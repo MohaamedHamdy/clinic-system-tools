@@ -20,6 +20,42 @@ const pool = new Pool({
 });
 
 
+app.post('/api/giveData', async (req, res) => {
+
+  const {email, pass, userrole, username} = req.body;
+
+  try {
+
+
+    const client = await pool.connect();
+    const userExists = "Select * FROM users WHERE email = $1";
+    const result = await client.query(userExists, [email])
+
+    if(result.rows.length === 1)
+    {
+      res.status(400).json({message: "Sorry, user already exists."})
+    }
+    else{
+
+      const insertQuery = 'INSERT INTO users (email, pass, userrole, username) VALUES ($1, $2, $3, $4) RETURNING *';
+      const newUser = await client.query(insertQuery, [email, pass, userrole, username])
+
+      res.json({ message: "Sign up successful", user: newUser.rows[0]})
+
+    }
+
+    client.release();
+   
+  } catch (error){
+
+    console.error("error during sign-up", error);
+    res.status(500).json({ error: "Internal server error"});
+
+  }
+
+})
+
+
 app.post('/api/receiveData', async (req, res) => {
     const { email, pass } = req.body;
     console.log('Received data from React:', { email, pass });

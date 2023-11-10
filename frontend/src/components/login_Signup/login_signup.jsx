@@ -10,17 +10,26 @@ const LoginSignup = () => {
     const [action, setAction] = useState("Sign Up");
     const [email, setEmail] = useState("");
     const [pass, setPassword] = useState("");
+    const [userrole, setUserType] = useState('Patient');
+    const [username, setName] = useState('');
 
-    const submit = async () => {
+    const submitIn = async () => {
         try {
-            const response = await axios.post('http://localhost:3001/api/receiveData', { email, pass });
-
+            const inResponse = await axios.post('http://localhost:3001/api/receiveData', { email, pass});
         } catch (error) {
             console.error('Error sending data to server:', error);
         }
     };
 
-    const [userType, setUserType] = useState('patient');
+    const submitUp = async () => {
+        try {
+            const upResponse = await axios.post('http://localhost:3001/api/giveData', { email, pass, userrole, username});
+        } catch (error) {
+            console.error('Error sending data to server:', error);
+        }
+    };
+
+    
 
     const handleUserTypeChange = (event) => {
         setUserType(event.target.value);
@@ -38,7 +47,7 @@ const LoginSignup = () => {
             <div className="inputs">
                 {action === "Log In" ? <div></div> : <div className="input">
                     <img src={user} alt="" />
-                    <input type="text" placeholder='Username' />
+                    <input type="text" onChange={(e) => {setName(e.target.value)}} placeholder='Username' />
                 </div>}
             </div>
 
@@ -58,7 +67,7 @@ const LoginSignup = () => {
 
 
             <div>
-                {action === "Sign Up" ? <div></div> : <input type="submit" onClick={submit} />
+                {action === "Sign Up" ? <div><input type="submit" onClick={submitUp}/></div> : <input type="submit" onClick={submitIn} />
                 }
             </div>
 
@@ -70,8 +79,8 @@ const LoginSignup = () => {
                     <label>
                         <input
                             type="radio"
-                            value="patient"
-                            checked={userType === 'patient'}
+                            value="Patient"
+                            checked={userrole === 'Patient'}
                             onChange={handleUserTypeChange}
                         />
                         Patient
@@ -79,8 +88,8 @@ const LoginSignup = () => {
                     <label>
                         <input
                             type="radio"
-                            value="doctor"
-                            checked={userType === 'doctor'}
+                            value="Doctor"
+                            checked={userrole === 'Doctor'}
                             onChange={handleUserTypeChange}
                         />
                         Doctor
@@ -88,8 +97,10 @@ const LoginSignup = () => {
 
 
                 </div>
+                
                 }
             </div>
+
 
 
             {/* login/sign up buttons */}
