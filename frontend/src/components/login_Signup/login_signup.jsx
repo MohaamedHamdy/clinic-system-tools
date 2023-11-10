@@ -66,8 +66,8 @@ const LoginSignup = () => {
             </div>
 
 
-            <div>
-                {action === "Sign Up" ? <div><input type="submit" onClick={submitUp}/></div> : <input type="submit" onClick={submitIn} />
+            <div className='body'>
+                {action === "Sign Up" ? <div><input className = "button" type="submit" onClick={submitUp}/></div> : <input className = "button" type="submit" onClick={submitIn} />
                 }
             </div>
 
