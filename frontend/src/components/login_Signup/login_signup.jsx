@@ -9,13 +9,12 @@ const LoginSignup = () => {
 
     const [action, setAction] = useState("Sign Up");
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [pass, setPassword] = useState("");
 
     const submit = async () => {
         try {
-            const response = await axios.post('http://localhost:3001/api/receiveData', { email, password });
-            console.log(response.email);
-            console.log(response.password);
+            const response = await axios.post('http://localhost:3001/api/receiveData', { email, pass });
+            
         } catch (error) {
             console.error('Error sending data to server:', error);
         }
