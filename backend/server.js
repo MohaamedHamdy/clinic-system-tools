@@ -1,12 +1,19 @@
 const express = require("express");
 const app = express();
+const bodyParser = require('body-parser');
+const cors = require("cors")
 
-const PORT = process.env.PORT || 3000
+app.use(bodyParser.json());
+app.use(cors());
+
+const PORT = process.env.PORT || 3001
 
 
-app.get("/", (req, res) => {
-    res.send("Hello");
-});
+app.post('/api/receiveData', (req, res) => {
+    const receivedData = req.body;
+    console.log('Received data from React:', receivedData);
+  });
+
 
 
 app.listen(PORT, () => {
