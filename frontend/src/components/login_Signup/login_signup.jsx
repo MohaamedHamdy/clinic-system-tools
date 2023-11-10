@@ -15,7 +15,7 @@ const LoginSignup = () => {
 
     const submitIn = async () => {
         try {
-            const inResponse = await axios.post('http://localhost:3001/api/receiveData', { email, pass});
+            const inResponse = await axios.post('http://localhost:3001/api/receiveData', { email, pass });
         } catch (error) {
             console.error('Error sending data to server:', error);
         }
@@ -23,13 +23,13 @@ const LoginSignup = () => {
 
     const submitUp = async () => {
         try {
-            const upResponse = await axios.post('http://localhost:3001/api/giveData', { email, pass, userrole, username});
+            const upResponse = await axios.post('http://localhost:3001/api/giveData', { email, pass, userrole, username });
         } catch (error) {
             console.error('Error sending data to server:', error);
         }
     };
 
-    
+
 
     const handleUserTypeChange = (event) => {
         setUserType(event.target.value);
@@ -47,7 +47,7 @@ const LoginSignup = () => {
             <div className="inputs">
                 {action === "Log In" ? <div></div> : <div className="input">
                     <img src={user} alt="" />
-                    <input type="text" onChange={(e) => {setName(e.target.value)}} placeholder='Username' />
+                    <input type="text" onChange={(e) => { setName(e.target.value) }} placeholder='Username' />
                 </div>}
             </div>
 
@@ -67,7 +67,7 @@ const LoginSignup = () => {
 
 
             <div className='body'>
-                {action === "Sign Up" ? <div><input className = "button" type="submit" onClick={submitUp}/></div> : <input className = "button" type="submit" onClick={submitIn} />
+                {action === "Sign Up" ? <div><input className="button" type="submit" onClick={submitUp} /></div> : <input className="button" type="submit" onClick={submitIn} />
                 }
             </div>
 
@@ -97,7 +97,6 @@ const LoginSignup = () => {
 
 
                 </div>
-                
                 }
             </div>
 
