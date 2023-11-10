@@ -89,3 +89,9 @@
     background: #eaeaea;
     color: #159b63;
 }
+
+.role {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
