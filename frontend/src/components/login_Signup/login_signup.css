@@ -137,6 +137,34 @@
 }
 
 
+.button2 {
+    
+    font-size: 18px;
+    font-weight: bold;
+    background-color: #159b63;
+    color: white;
+    border-radius: 40px;
+    height: 40px;
+    width: 180px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    -webkit-transition-duration: 0.2s;
+    transition-duration: 0.2s;
+    -webkit-transition-property: box-shadow, transform ;
+    transition-property: box-shadow, transform ;
+    position: relative;
+    bottom: 30px;
+}
+
+
+.button2:hover, .button2:focus, .button2:active{
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    -webkit-transform: scale(1.05);
+    transform: scale(1.05);
+}
+
+
 .body{
     justify-content: center;
     text-align: center;
