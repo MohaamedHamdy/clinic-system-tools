@@ -1,11 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+// import {apiService} from '../../utils/axiosInstance'
 import axios from 'axios'
+
+
 
 
 const PatientAppointment = ({ test1 }) => {
 
     const [doctors, setDoctors] = useState([]);
-    const [slots, setSlots] = useState([]);
+
+    useEffect(() => {
+        const fetchDoctors = async () => {
+            try {
+                const response = await axios.get('http://localhost:3001/api/doctors');
+                setDoctors(response.data);
+            } catch (error) {
+                console.error('Error fetching doctors:', error);
+                // Handle error, e.g., set an error state
+            }
+        };
+
+        fetchDoctors();
+    }, []);
+    const [slots, setSlots] = useState();
     const [selectedDoctor, setSelectedDoctor] = useState('');
     const [selectedSlot, setSelectedSlot] = useState('');
     const [email, setEmail] = useState('');
@@ -14,12 +31,28 @@ const PatientAppointment = ({ test1 }) => {
     const [username, setName] = useState('');
     const [appointments, setAppointments] = useState([]);
 
-
-
-
     // const handleUserTypeChange = (event) => {
     //     setUserType(event.target.value);
     // };
+
+    const onDoctorSelect = (e) => {
+        const doctorId = e.target.value;
+        setSelectedDoctor(doctorId);
+    }
+
+    useEffect(() => {
+        const fetchDoctorSlots = async () => {
+            try {
+                const response = await axios.post('http://localhost:3001/api/viewSlots',{doctorSlotId: selectedDoctor});
+                setSlots(response.data);
+            } catch (error) {
+                console.error('Error fetching doctor slots:', error);
+                // Handle error, e.g., set an error state
+            }
+        };
+
+        fetchDoctorSlots();
+    }, [selectedDoctor]);
 
 
     return (
@@ -31,25 +64,27 @@ const PatientAppointment = ({ test1 }) => {
             </div>
 
             <div className="inputs">
-                {<div className="input">
+                <div className="input">
+                    <h2>Doctor List</h2>
+
                     <label>Select Doctor:</label>
                     <select
                         className="selector"
-                        onChange={(e) => setSelectedDoctor(e.target.value)}
+                        onChange={(e) => onDoctorSelect(e)}
                         value={selectedDoctor}
                     >
-                        <option value="">Select Doctor</option>
+                        <option value="" disabled>Select Doctor</option>
                         {doctors.map(doctor => (
-                            <option key={doctor.id} value={doctor.id}>
-                                {doctor.name}
+                            <option key={doctor.userid} value={doctor.userid}>
+                                {doctor.username}
                             </option>
                         ))}
                     </select>
-                </div>}
+                </div>
             </div>
 
 
-            <div className="inputs">
+            {slots && (<div className="inputs">
                 <div className="input">
                     <label>Select Slot:</label>
                     <select
@@ -59,13 +94,13 @@ const PatientAppointment = ({ test1 }) => {
                     >
                         <option value="">Select Slot</option>
                         {slots.map(slot => (
-                            <option key={slot.id} value={slot.id}>
-                                {slot.time}
+                            <option key={slot.slot_id} value={slot.slot_id}>
+                                {new Date(slot.date).toDateString()}, {slot.start_time}
                             </option>
                         ))}
                     </select>
                 </div>
-            </div>
+            </div>)}
 
             <br />
 

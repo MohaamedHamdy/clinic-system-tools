@@ -62,7 +62,7 @@ app.post('/api/bookSlot', async (req,res) => {
 
 app.post('/api/viewSlots', async (req,res) => {
   try{
-
+    
     const {doctorSlotId} = req.body;
     const client = await pool.connect();
     const query = `SELECT * FROM slots WHERE doctor_id = $1 `;
@@ -76,7 +76,7 @@ app.post('/api/viewSlots', async (req,res) => {
   }
 })
 
-app.get('/api/doctors', async ( res) => {
+app.get('/api/doctors', async (req, res) => {
   try {
     const client = await pool.connect();
     const query = `SELECT * FROM users WHERE userrole = 'Doctor' `;
