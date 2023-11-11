@@ -4,7 +4,7 @@ import axios from 'axios'
 const SlotForm = ({ addSlot }) => {
   const [date, setDate] = useState('');
   const [start_time, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
+  // const [endTime, setEndTime] = useState('');
 
 
   const slotAdded = async () => {
@@ -17,11 +17,11 @@ const SlotForm = ({ addSlot }) => {
   };
 
   const handleAddSlot = () => {
-    if (date && start_time && endTime) {
-      addSlot({ date, start_time, endTime });
+    if (date && start_time) {
+      addSlot({ date, start_time });
       setDate('');
       setStartTime('');
-      setEndTime('');
+      // setEndTime('');
       slotAdded();
     } else {
       // Handle error or validation
@@ -37,8 +37,8 @@ const SlotForm = ({ addSlot }) => {
       <label htmlFor="start-time">Start Time:</label>
       <input type="time" id="start-time" value={start_time} onChange={(e) => setStartTime(e.target.value)} />
 
-      <label htmlFor="end-time">End Time:</label>
-      <input type="time" id="end-time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
+      {/* <label htmlFor="end-time">End Time:</label>
+      <input type="time" id="end-time" value={endTime} onChange={(e) => setEndTime(e.target.value)} /> */}
 
       <button onClick={handleAddSlot}>Add Slot</button>
     </div>

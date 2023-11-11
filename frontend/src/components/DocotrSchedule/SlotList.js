@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const SlotList = ({ }) => {
+const SlotList = () => {
 
   const [slots, setSlots] = useState([]);
 
-  axios.get('http://localhost:3001/api/viewSlots')
-    .then(response => {
-      setSlots(response.data);
-    })
-    .catch(error => {
-      console.error('Error fetching slots:', error);
-    });
+  useEffect(() => {
+    axios.get('http://localhost:3001/api/viewSlots')
+      .then(response => {
+        setSlots(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching slots:', error);
+      });
+  }, []);
 
   return (
 
@@ -21,7 +23,7 @@ const SlotList = ({ }) => {
       <ul>
         {slots.map(slot => (
           <li key={slot.id}>
-            Date: {slot.date}, Start Time: {slot.start_time}, End Time: {slot.end_time}
+            Date: {slot.date}, Start Time: {slot.start_time},
           </li>
         ))}
       </ul>
