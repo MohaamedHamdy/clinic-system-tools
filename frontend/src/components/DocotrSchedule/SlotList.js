@@ -8,12 +8,14 @@ const SlotList = () => {
   useEffect(() => {
     axios.get('http://localhost:3001/api/viewSlots')
       .then(response => {
+        console.log(response.data); // Log the data to the console
         setSlots(response.data);
       })
       .catch(error => {
         console.error('Error fetching slots:', error);
       });
   }, []);
+
 
   return (
 
@@ -23,7 +25,7 @@ const SlotList = () => {
       <ul>
         {slots.map(slot => (
           <li key={slot.id}>
-            Date: {slot.date}, Start Time: {slot.start_time},
+            Date: {slot.date}, Start Time: {slot.start_time}, Slot Id: {slot.slot_id}
           </li>
         ))}
       </ul>
