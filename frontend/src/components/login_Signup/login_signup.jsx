@@ -7,6 +7,7 @@ import passwordLogo from '../assets/lock.png'
 
 const LoginSignup = ({test1}) => {
 
+    const [doctors, setDoctors] = useState([]);
     const [action, setAction] = useState("Sign Up");
     const [email, setEmail] = useState("");
     const [pass, setPassword] = useState("");

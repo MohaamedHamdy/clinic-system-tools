@@ -23,6 +23,58 @@ const pool = new Pool({
 
 
 
+app.post('/api/bookSlot', async (req,res) => {
+  try{
+
+    const {slotId} = req.body;
+    const client = await pool.connect();
+    const query = `INSERT INTO appointments (slot_id, status) VALUES ($1, $2) RETURNING*`; 
+    await client.query(query, [slotId, 'booked']);
+
+    client.release();
+
+    res.json({ message: "booked successfuly!"});
+
+
+  }catch{
+
+  }
+
+})
+
+
+app.post('/api/viewSlots', async (req,res) => {
+  try{
+
+    const {doctorSlotId} = req.body;
+    const client = await pool.connect();
+    const query = `SELECT * FROM slots WHERE doctor_id = $1 `;
+    const result = await client.query(query, [doctorSlotId]);
+    
+    client.release();
+    res.json(result.rows);
+
+  }catch{
+
+  }
+})
+
+app.get('/api/doctors', async ( res) => {
+  try {
+    const client = await pool.connect();
+    const query = `SELECT * FROM users WHERE userrole = 'Doctor' `;
+    const result = await client.query(query);
+
+    client.release();
+
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error retrieving doctors:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
 app.post('/api/addSlot' , async(req,res) => {
   const {date, start_time} = req.body;
 
@@ -38,13 +90,12 @@ app.post('/api/addSlot' , async(req,res) => {
       res.status(500).json({ error: "Slot time already used."})
     }
     else{
-      const query2 = 'INSERT INTO slots (doctor_id) VALUES ($1) RETURNING *';
-      await pool.query(query2, [doctorId]);
+      
+      const queryInsertSlot = 'INSERT INTO slots (doctor_id, date, start_time) VALUES ($1, $2, $3) RETURNING *';
+      const resultInsertSlot = await client.query(queryInsertSlot, [7, date, start_time]);
 
-      const queryInsert = 'UPDATE slots SET date = $1, start_time = $2 WHERE doctor_id = $3 AND date = $4 AND start_time = $5';
-      const result2 = await client.query(queryInsert, [date, start_time, 7]);
+      res.json({ message: 'New slot added :D' });
 
-      res.json({ message: " success"});
     }
     client.release();
 
