@@ -1,25 +1,47 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 
 
-const PatientAppointment = ({ test1 }) => {
+const PatientAppointment = () => {
 
     const [doctors, setDoctors] = useState([]);
     const [slots, setSlots] = useState([]);
-    const [selectedDoctor, setSelectedDoctor] = useState('');
+    const [doctorSlotId, setSelectedDoctor] = useState('');
     const [selectedSlot, setSelectedSlot] = useState('');
-    const [email, setEmail] = useState('');
-    const [pass, setPassword] = useState('');
-    const [userrole, setUserType] = useState('Patient');
-    const [username, setName] = useState('');
     const [appointments, setAppointments] = useState([]);
 
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('http://localhost:3001/api/doctors');
+            console.log('Data fetched successfully.', response.data);
+            setDoctors(response.data);
+        } catch (error) {
+            console.error('Error fetching doctors:', error);
+        }
+    };
+
+    const fetchSlots = async (doctorSlotID) => {
+        try {
+            const response = await axios.post('http://localhost:3001/api/viewSlots', { doctorSlotID });
+            console.log('slots fetched successfully.', response.data);
+            setSlots(response.data);
+        } catch (error) {
+            console.error('Error fetching slots:', error);
+        }
+    };
 
 
 
-    // const handleUserTypeChange = (event) => {
-    //     setUserType(event.target.value);
-    // };
+
+
+    // const fetchData ()=>{}
+
+    const handleUserTypeChange = (event) => {
+
+        setSelectedDoctor(event.target.value);
+        fetchSlots(doctorSlotId);
+        console.log("here is the id" + doctorSlotId);
+    };
 
 
     return (
@@ -32,16 +54,17 @@ const PatientAppointment = ({ test1 }) => {
 
             <div className="inputs">
                 {<div className="input">
-                    <label>Select Doctor:</label>
+                    <label >Select Doctor:</label>
                     <select
                         className="selector"
                         onChange={(e) => setSelectedDoctor(e.target.value)}
-                        value={selectedDoctor}
+                        value={doctorSlotId}
+                        onClick={fetchData}
                     >
-                        <option value="">Select Doctor</option>
+                        <option value="" >Select Doctor</option>
                         {doctors.map(doctor => (
-                            <option key={doctor.id} value={doctor.id}>
-                                {doctor.name}
+                            <option key={doctor.id} value={doctor.id} onClick={handleUserTypeChange}>
+                                {doctor.username}
                             </option>
                         ))}
                     </select>
@@ -60,7 +83,7 @@ const PatientAppointment = ({ test1 }) => {
                         <option value="">Select Slot</option>
                         {slots.map(slot => (
                             <option key={slot.id} value={slot.id}>
-                                {slot.time}
+                                {slot.start_time}
                             </option>
                         ))}
                     </select>
@@ -73,7 +96,7 @@ const PatientAppointment = ({ test1 }) => {
 
             {/* login/sign up buttons */}
             <div className="submit-container">
-                <div className={"submit"} >Reserve</div>
+                <div className={"submit"} onClick={handleUserTypeChange}>Reserve</div>
             </div>
 
 
@@ -89,7 +112,7 @@ const PatientAppointment = ({ test1 }) => {
                 </ul>
             </div>
 
-        </div>
+        </div >
 
 
 
