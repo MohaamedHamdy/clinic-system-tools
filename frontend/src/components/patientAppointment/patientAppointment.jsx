@@ -19,10 +19,9 @@ const PatientAppointment = () => {
             console.error('Error fetching doctors:', error);
         }
     };
-
-    const fetchSlots = async (doctorSlotID) => {
+    const fetchSlots = async (doctorSlotId) => {
         try {
-            const response = await axios.post('http://localhost:3001/api/viewSlots', { doctorSlotID });
+            const response = await axios.post('http://localhost:3001/api/viewSlots', doctorSlotId);
             console.log('slots fetched successfully.', response.data);
             setSlots(response.data);
         } catch (error) {
@@ -35,12 +34,32 @@ const PatientAppointment = () => {
 
 
     // const fetchData ()=>{}
-
+    //using it in onChange , w fe akhr button reserve w ghalbn hya btshtghl hnak bs y3ny
     const handleUserTypeChange = (event) => {
 
-        setSelectedDoctor(event.target.value);
-        fetchSlots(doctorSlotId);
-        console.log("here is the id" + doctorSlotId);
+        // setSelectedDoctor(event.target.value);
+        // fetchSlots(doctorSlotId);
+        // console.log("here is the id " + doctorSlotId);
+
+        // const selectedDoctorName = event.target.value;
+        console.log(doctorSlotId)
+        console.log(doctors);
+        const selectedDoctor = doctors.find(doctor => doctor.username === doctorSlotId);
+        // console.log("hi2")
+
+        if (selectedDoctor) {
+            const selectedDoctorId = selectedDoctor.userid;
+            const selectedDoctorSpecialty = selectedDoctor.specialty;
+            // console.log("hi1")
+
+            setSelectedDoctor(selectedDoctorId);
+            fetchSlots(selectedDoctorId);
+            console.log("Here is the doctor id: " + selectedDoctorId);
+            console.log("Here is the doctor specialty: " + selectedDoctorSpecialty);
+        } else {
+            // console.log("hi3")
+
+        }
     };
 
 
@@ -79,6 +98,7 @@ const PatientAppointment = () => {
                         className="selector"
                         onChange={(e) => setSelectedSlot(e.target.value)}
                         value={selectedSlot}
+                        onClick={fetchSlots}
                     >
                         <option value="">Select Slot</option>
                         {slots.map(slot => (
