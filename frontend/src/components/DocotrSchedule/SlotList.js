@@ -4,7 +4,7 @@ import axios from 'axios';
 const SlotList = () => {
 
   const [slots, setSlots] = useState([]);
-  const [doctorSlotId, setDoctorId] = useState(4);
+  const [doctorSlotId, setDoctorId] = useState('');
 
   const fetchData = async () => {
     try {
@@ -16,14 +16,16 @@ const SlotList = () => {
       console.error('Error fetching slots:', error);
     }
   };
-
+  const handleDoctorIdChange = (event) => {
+    setDoctorId(event.target.value);
+  };
   return (
 
 
     <div>
       <h2>Available Slots</h2>
       <button onClick={fetchData}>Show Slots</button>
-
+      <input type="number" value={doctorSlotId} onChange={handleDoctorIdChange} placeholder="Enter your ID" />
       <ul>
         {slots.map(slot => (
           <li key={slot.id}>
