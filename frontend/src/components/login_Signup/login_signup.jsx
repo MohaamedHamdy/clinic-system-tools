@@ -5,7 +5,7 @@ import user from '../assets/user.png'
 import emailLogo from '../assets/email.png'
 import passwordLogo from '../assets/lock.png'
 
-const LoginSignup = () => {
+const LoginSignup = ({test1}) => {
 
     const [action, setAction] = useState("Sign Up");
     const [email, setEmail] = useState("");
@@ -16,6 +16,8 @@ const LoginSignup = () => {
     const submitIn = async () => {
         try {
             const inResponse = await axios.post('http://localhost:3001/api/receiveData', { email, pass });
+            console.log('authentication successful.', inResponse.data);
+            test1(inResponse.data.userrole)
         } catch (error) {
             console.error('Error sending data to server:', error);
         }
@@ -67,7 +69,7 @@ const LoginSignup = () => {
 
 
             <div className='body'>
-                {action === "Sign Up" ? <div><input className="button" type="submit" onClick={submitUp} /></div> : <input className="button" type="submit" onClick={submitIn} />
+                {action === "Sign Up" ? <div><input className="button" type="submit" onClick={submitUp} /></div> : <input className="button2" type="submit" onClick={submitIn} />
                 }
             </div>
 

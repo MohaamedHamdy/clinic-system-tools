@@ -1,11 +1,32 @@
 // import logo from './logo.svg';
 import './App.css';
+import React, { useState } from 'react'
 import LoginSignup from './components/login_Signup/login_signup';
+import DoctorSlots from './components/DocotrSchedule/DoctorSlots';
 
 function App() {
+
+  const [userrole, setUserType] = useState(null);
+      const test1 = (userrole) => {
+        setUserType(userrole);
+        console.log('Handling successful authentication with userType:', userrole);
+      };
   return (
+    
     <div>
-      <LoginSignup></LoginSignup>
+      {userrole === 'Doctor' ? (
+        <DoctorSlots />
+      ): userrole === 'Patient'? (
+        <DoctorSlots />
+      ):(
+
+      
+      <LoginSignup test1 = {test1}/>
+      )}
+
+
+
+
       {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
