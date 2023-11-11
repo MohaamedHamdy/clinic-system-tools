@@ -1,13 +1,40 @@
 import React, { useState, useEffect } from 'react'
-// import {apiService} from '../../utils/axiosInstance'
 import axios from 'axios'
 
-
-
-
 const PatientAppointment = ({ test1 }) => {
-
     const [doctors, setDoctors] = useState([]);
+    const [slots, setSlots] = useState();
+    const [selectedDoctor, setSelectedDoctor] = useState("");
+    const [selectedSlot, setSelectedSlot] = useState();
+    const [appointments, setAppointments] = useState();
+
+    const getAppontments = () => {
+        const fetchAppointments = async () => {
+            try {
+                const response = await axios.get('http://localhost:3001/api/showAppointments');
+                // debugger
+                setAppointments(response.data);
+            } catch (error) {
+                console.error('Error fetching appointments:', error);
+            }
+        }
+
+        fetchAppointments();
+    }
+
+    const getSlots = () => {
+        const fetchDoctorSlots = async () => {
+            try {
+                const response = await axios.post('http://localhost:3001/api/viewSlots', { doctorSlotId: selectedDoctor });
+                setSlots(response.data);
+            } catch (error) {
+                console.error('Error fetching doctor slots:', error);
+                // Handle error, e.g., set an error state
+            }
+        };
+
+        fetchDoctorSlots();
+    }
 
     useEffect(() => {
         const fetchDoctors = async () => {
@@ -19,17 +46,10 @@ const PatientAppointment = ({ test1 }) => {
                 // Handle error, e.g., set an error state
             }
         };
-
         fetchDoctors();
-    }, []);
-    const [slots, setSlots] = useState();
-    const [selectedDoctor, setSelectedDoctor] = useState('');
-    const [selectedSlot, setSelectedSlot] = useState('');
-    const [appointments, setAppointments] = useState([]);
+        getAppontments();
 
-    // const handleUserTypeChange = (event) => {
-    //     setUserType(event.target.value);
-    // };
+    }, []);
 
     const onDoctorSelect = (e) => {
         const doctorId = e.target.value;
@@ -37,18 +57,44 @@ const PatientAppointment = ({ test1 }) => {
     }
 
     useEffect(() => {
-        const fetchDoctorSlots = async () => {
+        if(!selectedDoctor) return;
+        getSlots();
+    }, [selectedDoctor]);
+
+    const onSlotSelect = (e) => {
+        const slotId = e.target.value;
+        setSelectedSlot(slotId);
+    }
+
+    const onReserveClick = () => {
+        const reserveSlot = async () => {
             try {
-                const response = await axios.post('http://localhost:3001/api/viewSlots',{doctorSlotId: selectedDoctor});
-                setSlots(response.data);
+                const response = await axios.post('http://localhost:3001/api/bookSlot', { slotId: selectedSlot });
+                getSlots();
+                getAppontments();
             } catch (error) {
-                console.error('Error fetching doctor slots:', error);
+                console.error('Error reserving slots:', error);
                 // Handle error, e.g., set an error state
             }
         };
 
-        fetchDoctorSlots();
-    }, [selectedDoctor]);
+        reserveSlot();
+    }
+
+    const cancelAppointment = (appointment_id, slot_id) => {
+        const cancelAppointmentCall = async () => {
+            try {
+                const response = await axios.delete('http://localhost:3001/api/cancelAppointment', { data: { slotId: slot_id, appointmentId: appointment_id } });
+                getAppontments();
+                if(selectedDoctor) getSlots();
+            } catch (error) {
+                console.error('Error canceling appointment:', error);
+                // Handle error, e.g., set an error state
+            }
+        };
+
+        cancelAppointmentCall();
+    }
 
 
     return (
@@ -70,7 +116,7 @@ const PatientAppointment = ({ test1 }) => {
                         value={selectedDoctor}
                     >
                         <option value="" disabled>Select Doctor</option>
-                        {doctors.map(doctor => (
+                        {doctors?.map(doctor => (
                             <option key={doctor.userid} value={doctor.userid}>
                                 {doctor.username}
                             </option>
@@ -80,24 +126,24 @@ const PatientAppointment = ({ test1 }) => {
             </div>
 
 
-            {slots && (<div className="inputs">
+            <div className="inputs">
                 <div className="input">
                     <label>Select Slot:</label>
                     <select
                         className="selector"
-                        onChange={(e) => setSelectedSlot(e.target.value)}
+                        onChange={onSlotSelect}
                         value={selectedSlot}
-                        onClick={()=>{}}
+                        disabled={!slots}
                     >
                         <option value="">Select Slot</option>
-                        {slots.map(slot => (
-                            <option key={slot.slot_id} value={slot.slot_id}>
+                        {slots?.map(slot => (
+                            <option key={slot.slot_id} value={slot.slot_id} disabled={!slot.availability}>
                                 {new Date(slot.date).toDateString()}, {slot.start_time}
                             </option>
                         ))}
                     </select>
                 </div>
-            </div>)}
+            </div>
 
             <br />
 
@@ -105,7 +151,7 @@ const PatientAppointment = ({ test1 }) => {
 
             {/* login/sign up buttons */}
             <div className="submit-container">
-                <div className={"submit"} onClick={()=>{}}>Reserve</div>
+                <div className={"submit"} disabled={!selectedSlot} onClick={onReserveClick}>Reserve</div>
             </div>
 
 
@@ -113,9 +159,10 @@ const PatientAppointment = ({ test1 }) => {
             <div>
                 <h2>Your Appointments</h2>
                 <ul>
-                    {appointments.map(appointment => (
-                        <li key={appointment.id}>
-                            {appointment.doctorName} - {appointment.slotTime}
+                    {appointments?.map(appointment => (
+                        <li key={appointment.appointment_id}>
+                            {appointment.appointment_id}
+                            <button onClick={() => cancelAppointment(appointment.appointment_id, appointment.slot_id)}>Cancel</button>
                         </li>
                     ))}
                 </ul>
