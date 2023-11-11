@@ -25,10 +25,6 @@ const PatientAppointment = ({ test1 }) => {
     const [slots, setSlots] = useState();
     const [selectedDoctor, setSelectedDoctor] = useState('');
     const [selectedSlot, setSelectedSlot] = useState('');
-    const [email, setEmail] = useState('');
-    const [pass, setPassword] = useState('');
-    const [userrole, setUserType] = useState('Patient');
-    const [username, setName] = useState('');
     const [appointments, setAppointments] = useState([]);
 
     // const handleUserTypeChange = (event) => {
@@ -91,6 +87,7 @@ const PatientAppointment = ({ test1 }) => {
                         className="selector"
                         onChange={(e) => setSelectedSlot(e.target.value)}
                         value={selectedSlot}
+                        onClick={()=>{}}
                     >
                         <option value="">Select Slot</option>
                         {slots.map(slot => (
@@ -108,7 +105,7 @@ const PatientAppointment = ({ test1 }) => {
 
             {/* login/sign up buttons */}
             <div className="submit-container">
-                <div className={"submit"} >Reserve</div>
+                <div className={"submit"} onClick={()=>{}}>Reserve</div>
             </div>
 
 
@@ -124,7 +121,7 @@ const PatientAppointment = ({ test1 }) => {
                 </ul>
             </div>
 
-        </div>
+        </div >
 
 
 
