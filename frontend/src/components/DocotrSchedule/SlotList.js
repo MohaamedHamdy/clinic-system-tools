@@ -4,7 +4,7 @@ import axios from 'axios';
 const SlotList = () => {
 
   const [slots, setSlots] = useState([]);
-  const [doctorSlotId, setDoctorId] = useState(4);
+  const [doctorSlotId, setDoctorId] = useState('');
 
   const fetchData = async () => {
     try {

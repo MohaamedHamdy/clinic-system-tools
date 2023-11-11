@@ -10,6 +10,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 var doctorId;
+var patientId;
 
 const PORT = process.env.PORT || 3001
 
@@ -23,14 +24,29 @@ const pool = new Pool({
 });
 
 
+// Endpoint to cancel an appointment
+app.delete('/api/cancelAppointment', async (req, res) => {
+
+  try {
+    const cancelAppointmentQuery = 'DELETE FROM appointments WHERE patient_id = $1';
+    await pool.query(cancelAppointmentQuery, [patientId]);
+
+    res.status(200).json({ message: 'Appointment canceled successfully' });
+  } catch (error) {
+    console.error('Error canceling appointment:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
 
 app.post('/api/bookSlot', async (req,res) => {
   try{
 
-    const {slotId} = req.body;
+    const {slotId, patientId} = req.body;
     const client = await pool.connect();
-    const query = `INSERT INTO appointments (slot_id, status) VALUES ($1, $2) RETURNING*`; 
-    await client.query(query, [slotId, 'booked']);
+    const query = `INSERT INTO appointments (slot_id, patient_id, status) VALUES ($1, $2, $3) RETURNING*`; 
+    await client.query(query, [slotId, patientId, 'booked']);
 
     client.release();
 
@@ -195,6 +211,7 @@ app.post('/api/receiveData', async (req, res) => {
   const { email, pass } = req.body;
   console.log('Received data from React:', { email, pass });
   try {
+
       const client = await pool.connect();
       const query = 'SELECT * FROM users WHERE email = $1 AND pass = $2';
       const result = await client.query(query, [email, pass]);
@@ -228,10 +245,22 @@ app.post('/api/receiveData', async (req, res) => {
                           await pool.query(queryInsertSlot, [doctorId]);
                       }
                   }
+              }else if(userrole === 'Patient')
+              {
+                const queryPatientId = "SELECT userid FROM users WHERE email = $1 AND userrole = 'Patient'";
+                const resultPatientId = await client.query(queryPatientId, [email]);
+    
+                if (resultPatientId.rows.length === 1) {
+    
+                  patientId = resultPatientId.rows[0].userid;
+                  console.log('Patient ID:', patientId);
+    
+                }
               }
 
               res.json({ message: 'Sign-in successful!', userid, userrole });
-          } else {
+
+          }else {
               res.status(500).json({ error: 'Failed to retrieve user information' });
           }
       } else {
