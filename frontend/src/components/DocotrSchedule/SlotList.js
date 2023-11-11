@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const SlotList = ({ slots }) => {
+const SlotList = ({ }) => {
 
-  const [slotts, setSlots] = useState([]);
+  const [slots, setSlots] = useState([]);
 
   axios.get('http://localhost:3001/api/viewSlots')
     .then(response => {
@@ -25,7 +25,7 @@ const SlotList = ({ slots }) => {
           </li>
         ))}
       </ul>
-      <p> there is ==== {slotts.length}</p>
+      <p> there is ==== {slots.length}</p>
     </div>
   );
 };
