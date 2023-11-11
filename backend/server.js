@@ -60,7 +60,7 @@ app.post('/api/viewSlots', async (req, res) => {
   }
 })
 
-app.get('/api/doctors', async (res) => {
+app.get('/api/doctors', async (req, res) => {
   try {
     const client = await pool.connect();
     const query = `SELECT * FROM users WHERE userrole = 'Doctor' `;
