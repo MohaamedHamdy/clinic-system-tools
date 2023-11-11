@@ -49,13 +49,11 @@ const PatientAppointment = () => {
 
         if (selectedDoctor) {
             const selectedDoctorId = selectedDoctor.userid;
-            const selectedDoctorSpecialty = selectedDoctor.specialty;
             // console.log("hi1")
 
             setSelectedDoctor(selectedDoctorId);
             fetchSlots(selectedDoctorId);
             console.log("Here is the doctor id: " + selectedDoctorId);
-            console.log("Here is the doctor specialty: " + selectedDoctorSpecialty);
         } else {
             // console.log("hi3")
 
