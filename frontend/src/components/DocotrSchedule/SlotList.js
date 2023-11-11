@@ -7,7 +7,7 @@ const SlotList = ({ slots }) => {
       <ul>
         {slots.map((slot, index) => (
           <li key={index}>
-            Date: {slot.date}, Start Time: {slot.startTime}, End Time: {slot.endTime}
+            Date: {slot.date}, Start Time: {slot.start_time}, End Time: {slot.endTime}
           </li>
         ))}
       </ul>

@@ -4,11 +4,12 @@ const bodyParser = require('body-parser');
 const cors = require("cors")
 const { Pool } = require("pg")
 
-var doctorId;
+
 
 app.use(bodyParser.json());
 app.use(cors());
 
+var doctorId;
 
 const PORT = process.env.PORT || 3001
 
@@ -79,9 +80,11 @@ app.post('/api/addSlot' , async(req,res) => {
   const {date, start_time} = req.body;
 
   try{
+    console.log("add slot",doctorId);
     const client = await pool.connect();
     const queryAvailable = `SELECT * FROM slots WHERE date = $1 AND start_time = $2 AND doctor_id = $3`;
-    const result = await client.query(queryAvailable, [date, start_time, 7])
+
+    const result = await client.query(queryAvailable, [date, start_time, doctorId])
 
     client.release();
 
@@ -92,7 +95,7 @@ app.post('/api/addSlot' , async(req,res) => {
     else{
       
       const queryInsertSlot = 'INSERT INTO slots (doctor_id, date, start_time) VALUES ($1, $2, $3) RETURNING *';
-      const resultInsertSlot = await client.query(queryInsertSlot, [7, date, start_time]);
+      const resultInsertSlot = await client.query(queryInsertSlot, [doctorId, date, start_time]);
 
       res.json({ message: 'New slot added :D' });
 
@@ -213,7 +216,7 @@ app.post('/api/receiveData', async (req, res) => {
                   const resultDoctorId = await client.query(queryDoctorId, [email]);
 
                   if (resultDoctorId.rows.length === 1) {
-                      const doctorId = resultDoctorId.rows[0].userid;
+                      doctorId = resultDoctorId.rows[0].userid;
                       console.log('Doctor ID:', doctorId);
 
                       const queryCheckSlots = 'SELECT doctor_id FROM slots WHERE doctor_id = $1';
