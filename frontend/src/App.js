@@ -3,25 +3,26 @@ import './App.css';
 import React, { useState } from 'react'
 import LoginSignup from './components/login_Signup/login_signup';
 import DoctorSlots from './components/DocotrSchedule/DoctorSlots';
+import PatientAppointment from './components/patientAppointment/patientAppointment';
 
 function App() {
 
   const [userrole, setUserType] = useState(null);
-      const test1 = (userrole) => {
-        setUserType(userrole);
-        console.log('Handling successful authentication with userType:', userrole);
-      };
+  const test1 = (userrole) => {
+    setUserType(userrole);
+    console.log('Handling successful authentication with userType:', userrole);
+  };
   return (
-    
+
     <div>
       {userrole === 'Doctor' ? (
         <DoctorSlots />
-      ): userrole === 'Patient'? (
-        <DoctorSlots />
-      ):(
+      ) : userrole === 'Patient' ? (
+        <PatientAppointment />
+      ) : (
 
-      
-      <LoginSignup test1 = {test1}/>
+
+        <LoginSignup test1={test1} />
       )}
 
 
