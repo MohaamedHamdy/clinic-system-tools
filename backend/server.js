@@ -17,20 +17,34 @@ const PORT = process.env.PORT || 3001
 
 const pool = new Pool({
   user: 'postgres',
-  host: 'localhost',
+  host: 'db',
   database: 'tools',
   password: '2314',
   port: 5432, // Default PostgreSQL port
 });
 
-app.get('/api/showAppointments', async(req, res) => {
-  try{
+async function connectToDatabase() {
+  try {
+    await pool.query('SELECT 1');
+    console.log('Connected to the database');
+  } catch (error) {
+    console.error('Error connecting to the database:', error.message);
+    // Retry after a delay
+    setTimeout(connectToDatabase, 2000);
+  }
+}
+
+connectToDatabase();
+
+
+app.get('/api/showAppointments', async (req, res) => {
+  try {
 
     const showQuery = `SELECT * FROM appointments WHERE patient_id = $1`
     const result = await pool.query(showQuery, [patientId]);
     res.json(result.rows);
 
-  }catch(error){
+  } catch (error) {
 
     console.error('Error deleting appointment.', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -40,7 +54,7 @@ app.get('/api/showAppointments', async(req, res) => {
 app.delete('/api/cancelAppointment', async (req, res) => {
 
   try {
-    const {appointmentId, slotId} = req.body;
+    const { appointmentId, slotId } = req.body;
     const cancelAppointmentQuery = 'DELETE FROM appointments WHERE appointment_id = $1';
     await pool.query(cancelAppointmentQuery, [appointmentId]);
 
@@ -80,10 +94,10 @@ app.post('/api/bookSlot', async (req, res) => {
 })
 
 
-app.post('/api/viewSlots', async (req,res) => {
-  try{
-    
-    const {doctorSlotId} = req.body;
+app.post('/api/viewSlots', async (req, res) => {
+  try {
+
+    const { doctorSlotId } = req.body;
     const client = await pool.connect();
     const query = `SELECT * FROM slots WHERE doctor_id = $1 `;
     const result = await client.query(query, [doctorSlotId]);
@@ -262,8 +276,7 @@ app.post('/api/receiveData', async (req, res) => {
               await pool.query(queryInsertSlot, [doctorId]);
             }
           }
-        }else if(userrole === 'Patient')
-        {
+        } else if (userrole === 'Patient') {
           const queryPatientId = "SELECT userid FROM users WHERE email = $1 AND userrole = 'Patient'";
           const resultPatientId = await client.query(queryPatientId, [email]);
 

@@ -1,0 +1,47 @@
+# version: '3.8'
+# services:
+#   db:
+#     image: postgres
+#     build: ./db
+#     container_name: db_container
+#     # environment:
+#     #   POSTGRES_USER: postgres
+#     #   POSTGRES_PASSWORD: 2314
+#     #   POSTGRES_DB: tools
+#     #   POSTGRES_HOST: db
+#     ports:
+#       - "5432:5432"
+#     volumes:
+#       - postgres_data:/var/lib/postgresql/data
+#     networks:
+#       - mynetwork
+#   backend:
+#     build: ./backend
+#     container_name: backend-container
+#     environment:
+#       DB_HOST: db # Use the service name as the host
+#       DB_PORT: 5432
+#       DB_USER: postgres
+#       DB_PASSWORD: 2314
+#       DB_NAME: tools
+#     depends_on:
+#       - db
+#     ports:
+#       - "3001:3001"
+#     networks:
+#       - mynetwork
+#   frontend:
+#     build: ./frontend
+#     container_name: frontend-container
+#     depends_on:
+#       - backend
+#     ports:
+#       - "3000:3000"
+#     stdin_open: true
+#     tty: true
+# volumes:
+#   postgres_data:
+# networks:
+#   mynetwork:
+
+
