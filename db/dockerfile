@@ -8,7 +8,7 @@ ENV POSTGRES_DB tools
 ENV PGUSER 1000
 ENV PGGROUP 1000
 
-RUN sudo chown -R 1000:1000 /path/to/your/postgresql/data
+RUN chown -R 1000:1000 /path/to/your/postgresql/data
 
 # Create a volume for PostgreSQL data
 VOLUME /var/lib/postgresql/data
