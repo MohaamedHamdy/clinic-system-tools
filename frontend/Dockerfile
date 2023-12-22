@@ -1,18 +1,23 @@
+# Use a base image
 FROM node:latest
 
+# Set the working directory
 WORKDIR /app
 
+# Copy package.json and package-lock.json to download dependencies
 COPY package*.json ./
 
+# Change ownership of npm cache directory
+RUN mkdir /.npm && chown -R 1009730000:0 /.npm
+
+# Install dependencies
 RUN npm install
 
+# Copy the rest of the application code
 COPY . .
 
-# Expose the port that your React app will run on during development
-EXPOSE 3000
+# Expose the port the app runs on
+# EXPOSE 3000
 
-ENV REACT_APP_SERVER_URL=http://localhost:3001
-
-
-# Start the development server
+# Command to run the application
 CMD ["npm", "start"]
