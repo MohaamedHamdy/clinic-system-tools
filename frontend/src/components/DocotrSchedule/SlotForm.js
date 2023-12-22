@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import axios from 'axios'
 
-const SlotForm = ({ addSlot }) => {
+const SlotForm = ({ addSlot, token }) => {
   const [date, setDate] = useState('');
   const [start_time, setStartTime] = useState('');
   // const [endTime, setEndTime] = useState('');
 
+  const serverUrl = process.env.REACT_APP_SERVER_URL || 'http://localhost:3001';
+
 
   const slotAdded = async () => {
     try {
-      const inResponse = await axios.post('http://localhost:3001/api/addSlot', { date, start_time });
+      const inResponse = await axios.post(`${serverUrl}/api/addSlot`, { date, start_time }, { headers: { Authorization: `Bearer ${token}` } });
       console.log('added successful.', inResponse.data);
     } catch (error) {
       console.error('Error sending data to server:', error);

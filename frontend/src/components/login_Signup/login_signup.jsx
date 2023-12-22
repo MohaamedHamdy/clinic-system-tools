@@ -5,20 +5,28 @@ import user from '../assets/user.png'
 import emailLogo from '../assets/email.png'
 import passwordLogo from '../assets/lock.png'
 
-const LoginSignup = ({test1}) => {
+const LoginSignup = ({ test1 }) => {
 
-    const [doctors, setDoctors] = useState([]);
+    const [token, setToken] = useState('');
+    // const [doctors, setDoctors] = useState([]);
     const [action, setAction] = useState("Sign Up");
     const [email, setEmail] = useState("");
     const [pass, setPassword] = useState("");
     const [userrole, setUserType] = useState('Patient');
     const [username, setName] = useState('');
 
+    const serverUrl = process.env.REACT_APP_SERVER_URL || 'http://localhost:3001';
+
+    console.log("SERVER URL  " + process.env.REACT_APP_SERVER_URL);
     const submitIn = async () => {
         try {
-            const inResponse = await axios.post('http://localhost:3001/api/receiveData', { email, pass });
+            const inResponse = await axios.post(`${serverUrl}/api/signIn`, { email, pass });
             console.log('authentication successful.', inResponse.data);
-            test1(inResponse.data.userrole)
+
+            const { token: authToken, userrole } = inResponse.data;
+            console.log(authToken);
+            setToken(authToken);
+            test1(userrole, authToken)
         } catch (error) {
             console.error('Error sending data to server:', error);
         }
@@ -26,7 +34,7 @@ const LoginSignup = ({test1}) => {
 
     const submitUp = async () => {
         try {
-            const upResponse = await axios.post('http://localhost:3001/api/giveData', { email, pass, userrole, username });
+            const upResponse = await axios.post(`${serverUrl}/api/signUp`, { email, pass, userrole, username });
         } catch (error) {
             console.error('Error sending data to server:', error);
         }

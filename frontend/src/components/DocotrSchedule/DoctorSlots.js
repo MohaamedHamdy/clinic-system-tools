@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import SlotForm from './SlotForm';
 import SlotList from './SlotList';
 
-const DoctorSlots = () => {
+const DoctorSlots = ({ token }) => {
   const [slots, setSlots] = useState([]);
 
   const addSlot = (newSlot) => {
@@ -12,8 +12,8 @@ const DoctorSlots = () => {
   return (
     <div className="App">
       <h1>Doctor schedule</h1>
-      <SlotForm addSlot={addSlot} />
-      <SlotList />
+      <SlotForm addSlot={addSlot} token={token} />
+      <SlotList token={token} />
     </div>
   );
 };

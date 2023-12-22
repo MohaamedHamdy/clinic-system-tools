@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const SlotList = () => {
+const SlotList = ({ token }) => {
 
   const [slots, setSlots] = useState([]);
   const [doctorSlotId, setDoctorId] = useState('');
 
+  const serverUrl = process.env.REACT_APP_SERVER_URL || 'http://localhost:3001';
+
+
+  // Example in SlotList.js
   const fetchData = async () => {
     try {
-      const response = await axios.post('http://localhost:3001/api/viewSlots', { doctorSlotId });
+      console.log("Helloo" + token);
+      const response = await axios.post(`${serverUrl}/api/doctor/slots`, { doctorSlotId }, { headers: { Authorization: `Bearer ${token}` } });
       console.log('Response:', response); // Log the entire response object
       console.log('Data fetched successfully.', response.data);
       setSlots(response.data);
@@ -16,6 +21,7 @@ const SlotList = () => {
       console.error('Error fetching slots:', error);
     }
   };
+
   const handleDoctorIdChange = (event) => {
     setDoctorId(event.target.value);
   };
@@ -27,11 +33,12 @@ const SlotList = () => {
       <button onClick={fetchData}>Show Slots</button>
       <input type="number" value={doctorSlotId} onChange={handleDoctorIdChange} placeholder="Enter your ID" />
       <ul>
-        {slots.map(slot => (
-          <li key={slot.id}>
+        {slots.map((slot, index) => (
+          <li key={index}>
             Date: {slot.date}, Start Time: {slot.start_time},
           </li>
         ))}
+
       </ul>
       <p> there is ==== {slots.length}</p>
     </div>
